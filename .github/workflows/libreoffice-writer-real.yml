@@ -95,7 +95,7 @@ jobs:
         run: python -m pytest nexus/tests/test_writer_real_libreoffice.py nexus/tests/test_native_writer_route_real.py -q -rP -p no:cacheprovider -o pythonpath=. --junitxml=writer-evidence/native-writer.xml
       - name: Preserve native Writer observations even on FAIL
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: native-writer-evidence
           path: writer-evidence/
