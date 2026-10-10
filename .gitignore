@@ -36,3 +36,6 @@ REGISTO-DE-EVENTOS-E-ACOES.md
 **/.venv/
 **/.pytest_cache/
 **/__pycache__/
+
+# AI Studio export metadata is not part of the project.
+metadata.json
