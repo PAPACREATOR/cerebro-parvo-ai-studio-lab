@@ -1,0 +1,16 @@
+{
+  "name": "folha-nexus",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "node -e \"console.log('Build completed')\"",
+    "start": "node server.js",
+    "test": "node nexus/tests/folha_revision_smoke.cjs && node nexus/tests/keyboard_shortcuts_smoke.cjs"
+  },
+  "dependencies": {
+    "@google/genai": "^2.28.0",
+    "express": "^4.21.2"
+  }
+}

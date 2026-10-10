@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Folha Nexus</title>
+  <meta name="description" content="Ambiente local e determinístico Nexus para interpretação, revisão e execução com autoridade humana.">
+  <meta property="og:title" content="Folha Nexus">
+  <meta property="og:description" content="Ambiente local e determinístico Nexus para interpretação, revisão e execução com autoridade humana.">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="identity"><span class="mark" aria-hidden="true">N</span><span>Nexus <span class="subtle">/ Folha</span></span></div>
+      <div class="top-actions">
+        <div class="theme-control" role="group" aria-label="Fundo adaptável da folha">
+          <button id="theme-light" type="button" class="theme-btn active" title="Papel branco">Branco</button>
+          <button id="theme-sepia" type="button" class="theme-btn" title="Fundo sépia suave">Sépia</button>
+          <button id="theme-dark" type="button" class="theme-btn" title="Fundo escuro">Escuro</button>
+        </div>
+        <span class="local-status">Local · decisão humana</span>
+        <button id="new" type="button" class="quiet">Nova folha</button>
+      </div>
+    </header>
+    <main>
+      <section class="sheet" aria-labelledby="page-title">
+        <div class="sheet-meta">FOLHA ÚNICA <span aria-hidden="true">·</span> ORIGINAL PRESERVADO</div>
+        <h1 id="page-title">O que queres fazer?</h1>
+        <p class="instruction">Escreve o pedido por palavras tuas. O Nexus interpreta primeiro e só executa operações expressamente confirmadas.</p>
+        <form id="form">
+          <label for="text" class="sr-only">O teu pedido</label>
+          <textarea id="text" spellcheck="true" autofocus placeholder="Escreve o pedido ou começa por @@ arquivo, ?? perguntar, & converter para pdf…"></textarea>
+          <div class="composer-bottom">
+            <label for="file" class="attachment" tabindex="0">+ Juntar ficheiro <span id="file-label">Até 2 MB; um de cada vez</span></label>
+            <input type="file" id="file" hidden>
+            <button id="submit" type="submit" class="primary">Interpretar pedido</button>
+          </div>
+        </form>
+        <p id="notice" class="notice" role="status" aria-live="polite"></p>
+        <div id="empty" class="empty">A interpretação aparece aqui. O Nexus não altera ficheiros nem conhecimento apenas por compreender uma frase.</div>
+        <section id="result" class="result" aria-label="Resultado ou interpretação" hidden>
+          <div class="result-head"><span id="status" class="status"></span><h2 id="result-title"></h2><span id="result-timestamp" class="result-timestamp subtle"></span></div>
+          <p id="message"></p>
+          <pre id="content"></pre>
+          <div id="actions" class="result-actions" hidden>
+            <p class="gate-note">Este resultado ainda está em Creative. Só a tua aprovação explícita pode promovê-lo para Canonical.</p>
+            <button id="prepare" type="button" class="primary">Rever antes de aprovar</button>
+            <button id="pdf" type="button" class="secondary" hidden>Descarregar PDF</button>
+            <button id="download" type="button" class="secondary">Descarregar texto</button>
+            <button id="print" type="button" class="secondary" title="Imprimir folha de resultado">Imprimir folha</button>
+          </div>
+        </section>
+      </section>
+      <section class="history-panel" aria-labelledby="history-title">
+        <div class="history-heading">
+          <h2 id="history-title">Trabalhos anteriores</h2>
+          <div class="history-meta">
+            <span class="processed-badge">Folhas Processadas: <strong id="processed-count">0</strong></span>
+            <button id="export-history" type="button" class="quiet export-btn" title="Descarregar cópia de segurança em JSON">Exportar JSON</button>
+            <span class="subtle">Somente os teus registos locais</span>
+          </div>
+        </div>
+        <div class="history-search-bar">
+          <input id="history-search" type="search" placeholder="Filtrar por título, estado ou palavra-chave…" aria-label="Pesquisar trabalhos anteriores">
+        </div>
+        <div id="category-filter" class="category-filter" role="tablist" aria-label="Tópicos organizados pelo sistema"></div>
+        <div id="history" class="history" aria-label="Histórico de pedidos"></div>
+      </section>
+    </main>
+    <footer>Entrada simples. Ferramentas delimitadas. <strong>A decisão continua tua.</strong></footer>
+  </div>
+  <dialog id="execution-confirmation" aria-labelledby="execution-title">
+    <div class="dialog-inner">
+      <p class="eyebrow">ANTES DE EXECUTAR</p><h2 id="execution-title">Confirmas este pedido?</h2>
+      <p id="execution-summary"></p><pre id="execution-review"></pre>
+      <label class="confirm"><input id="execution-confirm" type="checkbox"> Confirmo esta operação e o ficheiro indicado.</label>
+      <div class="dialog-actions"><button id="execution-cancel" type="button" class="secondary">Cancelar</button><button id="execution-approve" type="button" class="primary" disabled>Executar</button></div>
+    </div>
+  </dialog>
+  <dialog id="approval" aria-labelledby="approval-title">
+    <div class="dialog-inner">
+      <p class="eyebrow">AUTORIDADE HUMANA</p><h2 id="approval-title">Aprovar esta versão?</h2>
+      <p>Revê o conteúdo. A aprovação não apaga o original nem o histórico.</p>
+      <pre id="review"></pre>
+      <label class="confirm"><input id="confirm" type="checkbox"> Li e aprovo exatamente esta versão.</label>
+      <div class="dialog-actions"><button id="cancel" type="button" class="secondary">Não aprovar</button><button id="approve" type="button" class="primary" disabled>Aprovar</button></div>
+    </div>
+  </dialog>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('nexus-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('nexus-theme', theme);
+        document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+        const active = document.getElementById('theme-' + theme);
+        if (active) active.classList.add('active');
+      }
+      window.addEventListener('DOMContentLoaded', () => {
+        applyTheme(savedTheme);
+        ['light', 'sepia', 'dark'].forEach(theme => {
+          const btn = document.getElementById('theme-' + theme);
+          if (btn) btn.onclick = () => applyTheme(theme);
+        });
+      });
+    })();
+    if (!sessionStorage.getItem("nexus-session")) {
+      sessionStorage.setItem("nexus-session", "nexus-" + Math.random().toString(36).slice(2) + Date.now().toString(36));
+    }
+  </script>
+  <script src="/app.js"></script>
+</body>
+</html>

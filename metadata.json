@@ -1,0 +1,8 @@
+{
+  "name": "Folha Nexus",
+  "description": "Ambiente local e determinístico Nexus para interpretação, revisão e execução com autoridade humana.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
