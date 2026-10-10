@@ -119,7 +119,7 @@ jobs:
           Write-Output ("NEXUS_SUITE_ALL_STANDARD_PARTITION_" + $shard + "=PASS")
       - name: Preserve complete regression evidence even on FAIL
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-standard-regression-evidence-${{ matrix.shard }}
           path: windows-regression-evidence/

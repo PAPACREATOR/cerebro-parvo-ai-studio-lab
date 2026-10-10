@@ -62,7 +62,7 @@ jobs:
         run: python -m pytest nexus/tests/test_bootstrap_binding_functional.py -q -o pythonpath=. --junitxml=security-evidence/bootstrap-binding.xml
       - name: Preserve observations even on FAIL
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-confinement-evidence-${{ matrix.os }}
           path: security-evidence/

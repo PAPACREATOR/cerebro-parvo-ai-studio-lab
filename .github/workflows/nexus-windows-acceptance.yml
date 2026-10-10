@@ -60,7 +60,7 @@ jobs:
           if (@(Get-ChildItem -LiteralPath $pack -File).Count -ne 5) { throw 'PACKAGE_CONTENT_MISMATCH' }
           Write-Output "NEXUS_PINNED_PACKAGE=$head INSTALLER_SHA256=$pinHash"
       - name: Upload pinned Windows acceptance package only after successful tests
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nexus-windows-acceptance-PINNED
           path: ${{ runner.temp }}/Nexus-Windows-Test-Pinned/
@@ -68,7 +68,7 @@ jobs:
           retention-days: 14
       - name: Upload Windows install/pytest diagnostic report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: isolated-acceptance-test-evidence
           path: ${{ runner.temp }}/Nexus-Acceptance/reports/
